@@ -7,11 +7,20 @@ print("Fibonacci!")
 termo = int(input("Gostaria até que termo? "))
 n1 = 1
 n2 = 1
-if termo>2:
-    for x in range(2,termo):
+if termo<1:
+    print("Número inválido")
+else:
+    if termo==1:
+            print(n1)
+    else:
+        if termo==2:
+            print(n1)
+            print(n2)
+        else:
+            print(n1)
+            print(n2)     
+    for x in range(termo-2):
         nn = n1+n2
         n1 = n2
         n2 = nn
-    print(nn)
-else:
-    print(1)
+        print(nn)
