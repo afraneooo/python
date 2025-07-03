@@ -9,3 +9,4 @@ while not(1 in numeros):
     numeros.append(randint(1,100))
 del numeros[len(numeros)-1]
 print(numeros)
+print(f"Foram sorteados {len(numeros)} números.")
