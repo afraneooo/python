@@ -6,9 +6,12 @@ sorteados.
 from random import randint
 
 sorteados = []
-n = int(input("Números a serem sorteados: "))
-i = int(input("Intervalo inicial: "))
-f = int(input("Intervalo final: "))
+entrada = input().split()
+n = int(entrada[0])
+i = int(entrada[1])
+f = int(entrada[2])
+if i>f:
+    i,f = f,i
 for x in range(n):
     sorteados.append(randint(i,f))
 print(sorteados)
