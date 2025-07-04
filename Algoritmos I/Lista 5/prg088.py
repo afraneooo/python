@@ -18,6 +18,7 @@ nomes = []
 while not("fim" in nomes):
     nomes.append(input("Digite o nome ou fim para finalizar: \n"))
 del nomes[len(nomes)-1]
-print(choice(nomes))
+if len(nomes)>0:
+    print("Ganhador da rifa:",choice(nomes))
 
 
