@@ -16,7 +16,7 @@ print(choice(nomes))'''
 
 nomes = []
 while not("fim" in nomes):
-    nomes.append(input("Digite o nome:\n"))
+    nomes.append(input("Digite o nome ou fim para finalizar: \n"))
 del nomes[len(nomes)-1]
 print(choice(nomes))
 
