@@ -12,11 +12,11 @@ def contar_linhas(nomearq):
   l = arquivo.readline()
   while l!="":
     cont+=1
-    print(l)
     l = arquivo.readline()
   # for l in arquivo:
   #   cont += 1
   arquivo.close()
   return cont
 
-print(contar_linhas("oi.txt"))
+arq = input("Informe o nome do arquivo: ")
+print("Número de linhas:", contar_linhas(arq))

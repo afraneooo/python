@@ -1,0 +1,10 @@
+computador
+faca
+banana
+celular
+vassoura
+casa
+tigre
+gato
+cachorro
+faculdade
