@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox, simpledialog
 from utils import localizar_endereço, municipios_por_estado, listar_estados
 
 # montagem da tela
@@ -19,10 +19,9 @@ win.configure(bg="#281766")
 
 # funcoes
 
-def popular_cidades():
-  global cidades
-  cidades = municipios_por_estado(estado.get())
-
+global novo
+novo = True
+  
 def buscar_endereco():
   dados_end = localizar_endereço(cep.get())
   if dados_end:
@@ -31,8 +30,22 @@ def buscar_endereco():
     cidade.set(dados_end["localidade"])
     estado.set(dados_end["uf"])
 
+def atualizar_cidade(event):
+  estado_selecionado = cboestado.get()
+  cidades = municipios_por_estado(estado_selecionado)
+  cbocidade["values"] = cidades
+
+
 def pesquisar():
-  pass
+  resposta = simpledialog.askstring("Consulta","Digite o email do cliente:                                            ")
+  if resposta != '':
+    novo = False
+    habilitar()
+    btnexcluir.configure(state="normal")
+  else:
+    messagebox.showerror("Erro","Email inválido!")
+
+  # buscar o email no banco de dados e informar se é válido ou não
 
 def habilitar():
   txtemail.configure(state="normal")
@@ -47,13 +60,11 @@ def habilitar():
   bttnest_cv2.configure(state="normal")
   bttnocupacao.configure(state="normal")
   bttnocupacao2.configure(state="normal")
-  cbogenero.configure(state="normal")
-  cboestado.configure(state="normal")
-  cbocidade.configure(state="normal")
-  bttnpesq.configure(state="normal")
+  cbogenero.configure(state="readonly")
+  cboestado.configure(state="readonly")
+  cbocidade.configure(state="readonly")
   bttnbuscar.configure(state="normal")
   btncancelar.configure(state="normal")
-  btnexcluir.configure(state="normal")
   btnsalvar.configure(state="normal")
 
   btnnovo.configure(state="disabled")
@@ -76,7 +87,6 @@ def desabilitar():
   cbogenero.configure(state="disabled")
   cboestado.configure(state="disabled")
   cbocidade.configure(state="disabled")
-  bttnpesq.configure(state="disabled")
   bttnbuscar.configure(state="disabled")
   btncancelar.configure(state="disabled")
   btnexcluir.configure(state="disabled")
@@ -101,19 +111,79 @@ def limpar():
   celular.set("")
 
 def inserir():
+  novo = True
   habilitar()
   limpar()
 
+def popupError(campo):
+  ''' # JEITO COM TELA NOVA
+  popupErro = Tk()
+  popupErro.title("Erro")
+  btela = win.winfo_screenwidth()
+  htela = win.winfo_screenheight()
+  bpop = 300
+  hpop = 80
+  px = (btela - bpop)/2
+  py = (htela - hpop)/2
+  popupErro.geometry("%dx%d+%d+%d"%(bpop,hpop,px,py))
+  lblerro = Label(popupErro,text=f"Campo {campo} vazio! Tente novamente.").place(x=49-(len(campo)),y=15)
+  btnok = Button(popupErro,text="Ok!",command=popupErro.destroy,width=5)
+  btnok.place(x=125,y=42) '''
+  messagebox.showwarning(title="Erro de validação",message=f"O campo {campo} é obrigatório.")
+
 def salvar():
+  if email.get() == '':
+    popupError("Email")
+    txtemail.focus_set()
+  elif nome.get() == '':
+    popupError("Nome")
+    txtnome.focus_set()
+  elif est_cv.get() == 0:
+    popupError("Estado Civil")
+  elif telefone.get() == '' or celular.get() == 0:
+    popupError("Telefone/Celular (pelo menos um)")
+  elif genero.get() == '':
+    popupError("Gênero")
+    cbogenero.focus_set()
+  elif cep.get() == '':
+    popupError("CEP")
+    txtcep.focus_set()
+  elif estado.get() == '':
+    popupError("Estado")
+    cboestado.focus_set()
+  elif cidade.get() == '':
+    popupError("Cidade")
+    cbocidade.focus_set()
+  elif endereco.get() == '':
+    popupError("Endereço")
+    txtendereco.focus_set()
+  elif bairro.get() == '':
+    popupError("Bairro")
+    txtbairro.focus_set()
+  elif numero.get() == '':
+    popupError("Número")
+    txtnumero.focus_set()
+  else:
+    messagebox.showinfo(title="Sucesso",message="Cadastro realizado com sucesso!")
+    desabilitar()
+    limpar()
+  
   # validar os campos
+  
   # gravar no bd
+  
   limpar()
 
 def cancelar():
+  desabilitar()
   limpar()
 
 def excluir():
-  limpar()
+  resposta = messagebox.askokcancel(title="Confirmação",message="Tem certeza que gostaria de APAGAR esse registro?")
+  if resposta:
+    messagebox.showinfo(title="Sucesso",message="Registro excluído com sucesso!")
+    limpar()
+    desabilitar()
 
 # componentes da tela
 
@@ -169,13 +239,13 @@ txtcep.place(x=100,y=108)
 estado = StringVar(win)
 estados = listar_estados()
 lblestado = Label(win,text="Estado:",bg="#281766",fg="#ffffff").place(x=290,y=105)
-cboestado = ttk.Combobox(win,textvariable=estado,values=estados,width=4)
+cboestado = ttk.Combobox(win,state="readonly",textvariable=estado,values=estados,width=4)
 cboestado.place(x=340,y=106)
+cboestado.bind("<<ComboboxSelected>>",atualizar_cidade)
 
 cidade = StringVar(win)
-cidades = []
 lblcidade = Label(win,text="Cidade:",bg="#281766",fg="#ffffff").place(x=390,y=105)
-cbocidade = ttk.Combobox(win,textvariable=cidade,values=cidades,width=32)
+cbocidade = ttk.Combobox(win,state="readonly",textvariable=cidade,width=32)
 cbocidade.place(x=440,y=106)
 
 bttnbuscar = Button(win,text="Buscar",command=buscar_endereco,width=10)
