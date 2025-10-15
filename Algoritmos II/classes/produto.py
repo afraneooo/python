@@ -17,11 +17,3 @@ class Produto:
     
     def __str__(self):
         return f"Descrição: {self.__desc}\nPreço: {self.__preco}"
-
-#principal
-
-picles = Produto()
-picles.setDesc("Picles")
-picles.setPreco(0.99)
-print(picles)
-print("Total: R$",picles.calcularPreco(float(input("Digite a quantidade que gostaria de comprar: "))))
