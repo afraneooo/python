@@ -42,10 +42,37 @@ def atualizar_cidade(event):
 
 def pesquisar():
   resposta = simpledialog.askstring("Consulta","Digite o email do cliente:                                            ")
-  if resposta != '':
+  cliente = cdao.consultar(resposta)
+  if cliente:
+    global novo
     novo = False
     habilitar()
     btnexcluir.configure(state="normal")
+    email.set(cliente.getEmail())
+    nome.set(cliente.getNome())
+    if cliente.getEstado_civil():
+      est_cv.set(1)
+    else:
+      est_cv.set(2)
+    if cliente.getEstuda():
+      estuda.set(True)
+    else:
+      estuda.set(False)
+    if cliente.getTrabalha():
+      trabalha.set(True)
+    else:
+      trabalha.set(False)
+    genero.set(cliente.getGenero())
+    cep.set(cliente.getCep())
+    endereco.set(cliente.getEndereco())
+    numero.set(cliente.getNumero())
+    bairro.set(cliente.getBairro())
+    cidade.set(cliente.getCidade())
+    estado.set(cliente.getEstado())
+    telefone.set(cliente.getTelefone())
+    celular.set(cliente.getCelular())
+
+
   else:
     messagebox.showerror("Erro","Email inválido!")
 
@@ -115,6 +142,7 @@ def limpar():
   celular.set("")
 
 def inserir():
+  global novo
   novo = True
   habilitar()
   limpar()
@@ -187,11 +215,13 @@ def salvar():
     c1.setTrabalha(trabalha.get())
     print(c1)
     #comandos bancos de dados
+    global novo
     if novo:
       if cdao.incluir(c1):
         messagebox.showinfo(title="Sucesso",message="Cadastro realizado com sucesso!")
     else:
-      messagebox.showinfo(title="Sucesso",message="Dados atualizados com sucesso!")
+      if cdao.atualizar(c1):
+        messagebox.showinfo(title="Sucesso",message="Dados atualizados com sucesso!")
     desabilitar()
     limpar()
     
@@ -201,7 +231,8 @@ def cancelar():
 
 def excluir():
   resposta = messagebox.askokcancel(title="Confirmação",message="Tem certeza que gostaria de APAGAR esse registro?")
-  if resposta:
+  
+  if resposta and cdao.excluir(txtemail.get()):
     messagebox.showinfo(title="Sucesso",message="Registro excluído com sucesso!")
     limpar()
     desabilitar()

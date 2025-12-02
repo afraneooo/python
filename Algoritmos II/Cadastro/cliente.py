@@ -1,9 +1,11 @@
 class Cliente:
-    def __init__(self, email=None, nome=None, telefone=None, celular=None,
-                 genero=None, cep=None, endereco=None, estado=None,
-                 cidade=None, bairro=None, numero=None, estado_civil=None,
-                 estuda=None, trabalha=None):
-
+    def __init__(self, email=None, nome=None,estado_civil=None, 
+                 estuda=None, trabalha=None,
+                 genero=None, cep=None, endereco=None, numero=None,
+                 cidade=None, bairro=None, estado=None, 
+                 telefone=None, celular=None):
+#(email,nome,estado_civil,estuda,trabalha,genero,
+#cep,endereco,numero,bairro,cidade,estado,telefone,celular
         # Atributos Privados
         # Usei nomes padronizados em snake_case (email, nome, telefone, etc.) 
         # para os atributos internos, que é a convenção Python.
